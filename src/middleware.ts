@@ -1,14 +1,30 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabasePublicConfig } from "@/lib/supabase/env";
 
 export async function middleware(request: NextRequest) {
+  const config = getSupabasePublicConfig();
+  const pathname = request.nextUrl.pathname;
+  const isProtected =
+    pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
+
+  if (!config) {
+    if (isProtected) {
+      return new NextResponse(
+        "Supabase is not configured: set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY), then restart the dev server or redeploy.",
+        { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } },
+      );
+    }
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({
     request,
   });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    config.url,
+    config.anonKey,
     {
       cookies: {
         getAll() {
@@ -32,10 +48,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
-  const isProtected =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone();

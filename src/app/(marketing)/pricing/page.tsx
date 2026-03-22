@@ -40,9 +40,9 @@ export default function PricingPage() {
         {tiers.map((t) => (
           <div
             key={t.name}
-            className={`flex flex-col rounded-2xl border p-8 ${
+            className={`flex min-h-[320px] flex-col rounded-2xl border p-8 ${
               t.featured
-                ? "border-teal-500 bg-teal-50/40 shadow-xl shadow-teal-500/10"
+                ? "border-emerald-500/50 bg-emerald-50/60 shadow-xl shadow-emerald-500/10"
                 : "border-slate-200 bg-white"
             }`}
           >
@@ -56,8 +56,8 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-8">
-              <WhatsAppCta className="block w-full rounded-full bg-emerald-600 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-700" />
+            <div className="mt-auto w-full shrink-0 pt-8">
+              <WhatsAppCta className="w-full" />
             </div>
           </div>
         ))}

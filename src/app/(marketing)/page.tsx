@@ -156,17 +156,19 @@ export default function HomePage() {
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`flex flex-col rounded-2xl border p-6 ${
+              className={`flex min-h-[280px] flex-col rounded-2xl border p-6 ${
                 p.highlight
-                  ? "border-teal-500 bg-teal-50/50 shadow-lg shadow-teal-500/10"
+                  ? "border-emerald-500/50 bg-emerald-50/60 shadow-lg shadow-emerald-500/10"
                   : "border-slate-200 bg-white"
               }`}
             >
               <h3 className="text-lg font-semibold text-slate-900">{p.name}</h3>
               <p className="mt-2 text-3xl font-bold text-slate-900">{p.price}</p>
-              <p className="mt-3 flex-1 text-sm text-slate-600">{p.blurb}</p>
-              <div className="mt-6">
-                <WhatsAppCta className="w-full rounded-full bg-emerald-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-emerald-700" />
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">
+                {p.blurb}
+              </p>
+              <div className="mt-8 w-full shrink-0">
+                <WhatsAppCta className="w-full" />
               </div>
             </div>
           ))}
@@ -179,7 +181,7 @@ export default function HomePage() {
           Message us on WhatsApp to onboard — we&apos;ll help you launch fast.
         </p>
         <div className="mt-8 flex justify-center">
-          <WhatsAppCta className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-8 py-3 text-sm font-semibold text-white shadow-lg hover:bg-emerald-400" />
+          <WhatsAppCta className="!bg-emerald-500 shadow-lg shadow-black/20 hover:!bg-emerald-400" />
         </div>
       </section>
     </>
