@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { APP_NAME } from "@/lib/constants";
 
@@ -6,7 +7,15 @@ export function SiteFooter() {
     <footer className="border-t border-slate-200 bg-slate-50">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div>
-          <p className="font-semibold text-slate-900">{APP_NAME}</p>
+          <div className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Cloud-LB"
+              width={200}
+              height={72}
+              className="h-14 w-auto max-w-[min(220px,85vw)] object-contain object-left sm:h-16"
+            />
+          </div>
           <p className="mt-1 max-w-sm text-sm text-slate-600">
             AI chatbots built for dental practices — appointments, answers, and
             trust around the clock.

@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   },
   description:
     "24/7 AI chatbots for dental clinics — booking, answers, and a model trained on your practice.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

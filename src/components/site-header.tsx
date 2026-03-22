@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { APP_NAME } from "@/lib/constants";
 
 const nav = [
   { href: "/features", label: "Features" },
@@ -12,11 +12,16 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-slate-900">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 text-sm font-bold text-white shadow-sm">
-            CL
-          </span>
-          <span>{APP_NAME}</span>
+        <Link href="/" className="flex shrink-0 items-center">
+          <Image
+            src="/logo.png"
+            alt="Cloud-LB"
+            width={200}
+            height={72}
+            className="h-11 w-auto max-h-12 object-contain object-left sm:h-12"
+            priority
+            sizes="(max-width: 640px) 160px, 200px"
+          />
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
           {nav.map((item) => (
