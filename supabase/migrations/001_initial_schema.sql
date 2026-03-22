@@ -1,5 +1,8 @@
 -- Cloud-LB initial schema + RLS
 -- Run in Supabase SQL Editor or via CLI after creating project.
+--
+-- After first signup, promote your operator account:
+--   update public.profiles set role = 'admin' where id = 'YOUR_USER_UUID';
 
 create extension if not exists "uuid-ossp";
 

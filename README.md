@@ -1,3 +1,7 @@
+# cloud-lb
+
+AI chatbots for dental practices — public marketing site, user dashboard, admin portal, Supabase-backed data, and embeddable widget.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

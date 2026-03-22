@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { chatBodySchema } from "@/lib/validations";
 
+/**
+ * Public widget endpoint — uses service role to write messages (never expose this key to the client).
+ * Set SUPABASE_SERVICE_ROLE_KEY on the server for production widgets.
+ */
 export async function POST(request: Request) {
   const json = await request.json().catch(() => null);
   const parsed = chatBodySchema.safeParse(json);
@@ -10,35 +14,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
-  const { botId, message } = parsed.data;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const supabase = createServiceClient();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Widget backend not configured (SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 },
+    );
   }
+
+  const { botId, message } = parsed.data;
 
   const { data: bot, error: botErr } = await supabase
     .from("bots")
-    .select("id, organization_id, name")
+    .select("id, name")
     .eq("id", botId)
     .single();
 
   if (botErr || !bot) {
     return NextResponse.json({ error: "Bot not found" }, { status: 404 });
-  }
-
-  const { data: member } = await supabase
-    .from("organization_members")
-    .select("user_id")
-    .eq("organization_id", bot.organization_id)
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (!member) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const { data: docs } = await supabase
@@ -55,7 +48,7 @@ export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     const fallback =
-      "OpenAI is not configured (set OPENAI_API_KEY). Here is a stub response based on your message.";
+      "OpenAI is not configured on the server. Add OPENAI_API_KEY to enable AI replies.";
     await supabase.from("messages").insert({
       bot_id: botId,
       user_message: message,
@@ -65,7 +58,7 @@ export async function POST(request: Request) {
   }
 
   const openai = new OpenAI({ apiKey });
-  const system = `You are a helpful assistant for a dental clinic. Use the following knowledge when relevant. If something is not in the knowledge, say you are not sure and suggest contacting the clinic.\n\nKnowledge:\n${context || "(no documents yet)"}`;
+  const system = `You are a helpful assistant for a dental clinic. Use the following knowledge when relevant.\n\nKnowledge:\n${context || "(no documents yet)"}`;
 
   try {
     const completion = await openai.chat.completions.create({

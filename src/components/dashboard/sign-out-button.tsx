@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export function SignOutButton() {
+export function SignOutButton({ className }: { className?: string }) {
   const router = useRouter();
 
   async function signOut() {
@@ -17,7 +17,10 @@ export function SignOutButton() {
     <button
       type="button"
       onClick={signOut}
-      className="text-sm font-medium text-slate-600 hover:text-slate-900"
+      className={
+        className ??
+        "text-sm font-medium text-slate-600 hover:text-slate-900"
+      }
     >
       Sign out
     </button>
